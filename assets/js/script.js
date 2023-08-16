@@ -1,5 +1,3 @@
-var startButton = document.querySelector("#start");
-
 var myQuestions = [
     {
         question: "Commonly used data types do not include:",
@@ -9,7 +7,7 @@ var myQuestions = [
     {
         question: "Which of the following is not a type of javaSript loop?",
         answers: ['for', 'do while', 'if statememts', 'none of the above'],
-        correctAnswer: 'if statements'
+        correctAnswer: 'if statememts'
     },
     {
         question: "This is a valid javaScript string:\n 'I haven't seen it' ",
@@ -28,14 +26,18 @@ var myQuestions = [
     }
 ];
 
+var startButton = document.querySelector("#start");
 var quizSpace = document.querySelector('#question');
 var answerSpace = document.querySelector('#answers');
+var timerSpace = document.getElementById('timer');
+var feedBackSpace = document.querySelector('#feedback')
 var loop = true;
 var questionNum = 0;
+var numCorrect = 0;
+var timeLeft = 60;
 
 function renderQuestions(){
     quizSpace.innerHTML = myQuestions[questionNum].question;
-    
     // Resets available answers
     answerSpace.innerHTML = '';
     // This for loop will render the possible answers
@@ -45,7 +47,7 @@ function renderQuestions(){
         if(myQuestions[questionNum].answers[i] == myQuestions[questionNum].correctAnswer){
             button.classList.add('correct');
         }else{
-            button.classList.add('possible-answers');
+            button.classList.add('wrong-answer');
         }
         button.classList.add('choice');
         answerSpace.appendChild(button);
@@ -54,8 +56,14 @@ function renderQuestions(){
 // I'll have to make another function called startGame that the event listener will call that will include code for the timer and deducting time.
 function startGame() {
     startButton.style.display = 'none';
+    var handleTimer = setInterval(function(){
+        timerSpace.textContent = timeLeft;
+        timeLeft--;
+    }, 1000)
+    if(timeLeft <= 0){
+        clearInterval(handleTimer);
+    }
     renderQuestions();
-
     // Remove any existing event listeners on answerSpace
     answerSpace.removeEventListener("click", answerButtonClick);
 
@@ -68,6 +76,13 @@ function answerButtonClick(event) {
 
     // Check if the clicked element has the 'choice' class
     if (clickedButton.classList.contains("choice")) {
+        if(clickedButton.classList.contains("correct")){
+            numCorrect++;
+            feedBackSpace.textContent = 'Correct!';
+        }else if(clickedButton.classList.contains("wrong-answer")){
+            timeLeft = timeLeft - 5;
+            feedBackSpace.textContent = 'Wrong!';
+        }
         questionNum++;
         renderQuestions();
     }
