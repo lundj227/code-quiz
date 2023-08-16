@@ -1,11 +1,11 @@
 var myQuestions = [
     {
-        question: "Commonly used data types do not include:",
+        question: "Commonly used data types do NOT include:",
         answers: ['boolean', 'number', 'string', 'event listener'],
         correctAnswer: 'event listener'
     },
     {
-        question: "Which of the following is not a type of javaSript loop?",
+        question: "Which of the following is NOT a type of javaSript loop?",
         answers: ['for', 'do while', 'if statememts', 'none of the above'],
         correctAnswer: 'if statememts'
     },
@@ -23,18 +23,24 @@ var myQuestions = [
         question: "Which is a commonly used coding language for web development?",
         answers: ['javaScript', 'Chrome','Safari','All of the above'],
         correctAnswer: 'javaScript'
-    }
+    }/*,
+    {
+        question: "",
+        answers: [],
+        correctAnswer: ''
+    }*/
 ];
 
 var startButton = document.querySelector("#start");
 var quizSpace = document.querySelector('#question');
 var answerSpace = document.querySelector('#answers');
 var timerSpace = document.getElementById('timer');
-var feedBackSpace = document.querySelector('#feedback')
+var feedBackSpace = document.querySelector('#feedback');
 var loop = true;
 var questionNum = 0;
 var numCorrect = 0;
 var timeLeft = 60;
+var handleTimer;
 
 function renderQuestions(){
     quizSpace.innerHTML = myQuestions[questionNum].question;
@@ -56,13 +62,18 @@ function renderQuestions(){
 // I'll have to make another function called startGame that the event listener will call that will include code for the timer and deducting time.
 function startGame() {
     startButton.style.display = 'none';
-    var handleTimer = setInterval(function(){
+    handleTimer = setInterval(function(){
         timerSpace.textContent = timeLeft;
         timeLeft--;
+        if(timeLeft <= 0){
+            clearInterval(handleTimer);
+            timerSpace.textContent = '';
+            quizSpace.textContent = '';
+            answerSpace.textContent = '';
+            feedBackSpace.textContent = 'Quiz completed!';
+        }
     }, 1000)
-    if(timeLeft <= 0){
-        clearInterval(handleTimer);
-    }
+
     renderQuestions();
     // Remove any existing event listeners on answerSpace
     answerSpace.removeEventListener("click", answerButtonClick);
@@ -80,11 +91,20 @@ function answerButtonClick(event) {
             numCorrect++;
             feedBackSpace.textContent = 'Correct!';
         }else if(clickedButton.classList.contains("wrong-answer")){
-            timeLeft = timeLeft - 5;
+            timeLeft = timeLeft - 10;
             feedBackSpace.textContent = 'Wrong!';
         }
+        if (questionNum >= myQuestions.length -1) {
+            clearInterval(handleTimer);
+            timerSpace.textContent = '';
+            quizSpace.textContent = '';
+            answerSpace.textContent = '';
+            feedBackSpace.textContent = 'Quiz completed!';
+            
+            }
         questionNum++;
         renderQuestions();
+        
     }
 }
 
