@@ -34,23 +34,43 @@ var loop = true;
 var questionNum = 0;
 
 function renderQuestions(){
-    do{
-        quizSpace.innerHTML = myQuestions[questionNum].question;
-        // This for loop will render the possible answers
-        for(var i = 0; i < myQuestions[questionNum].answers.length; i++){
-            let button = document.createElement('button')
-            button.innerText = myQuestions[questionNum].answers[i];
-            if(myQuestions[questionNum].answers[i] == myQuestions[questionNum].correctAnswer){
-                button.classList.add('correct');
-            }else{
-                button.classList.add('possible-answers');
-            }
-            answerSpace.appendChild(button);
+    quizSpace.innerHTML = myQuestions[questionNum].question;
+    
+    // Resets available answers
+    answerSpace.innerHTML = '';
+    // This for loop will render the possible answers
+    for(var i = 0; i < myQuestions[questionNum].answers.length; i++){
+        let button = document.createElement('button')
+        button.innerText = myQuestions[questionNum].answers[i];
+        if(myQuestions[questionNum].answers[i] == myQuestions[questionNum].correctAnswer){
+            button.classList.add('correct');
+        }else{
+            button.classList.add('possible-answers');
         }
-        loop = false;
-
-    }
-    while(loop == true);
+        button.classList.add('choice');
+        answerSpace.appendChild(button);
+        }
 }
 // I'll have to make another function called startGame that the event listener will call that will include code for the timer and deducting time.
-startButton.addEventListener("click", renderQuestions)
+function startGame() {
+    startButton.style.display = 'none';
+    renderQuestions();
+
+    // Remove any existing event listeners on answerSpace
+    answerSpace.removeEventListener("click", answerButtonClick);
+
+    // Add a single event listener to the answerSpace
+    answerSpace.addEventListener("click", answerButtonClick);
+}
+
+function answerButtonClick(event) {
+    var clickedButton = event.target;
+
+    // Check if the clicked element has the 'choice' class
+    if (clickedButton.classList.contains("choice")) {
+        questionNum++;
+        renderQuestions();
+    }
+}
+
+startButton.addEventListener("click", startGame);
