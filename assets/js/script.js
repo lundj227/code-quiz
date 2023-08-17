@@ -167,7 +167,7 @@ function answerButtonClick(event) {
 
             submitButton.addEventListener('click', function(){
                 var initialsValue = initalsInput.value;
-            
+                //initialsValue = "";
                 // Get existing scores from Local Storage or initialize an empty array
                 var storedScores = JSON.parse(localStorage.getItem("quizScores")) || [];
             
