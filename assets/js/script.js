@@ -117,6 +117,7 @@ function startGame() {
                 localStorage.setItem("quizScores", JSON.stringify(storedScores));
 
                 displayScores();
+                playAgainButton.style.display = 'block';
             });    
         }
     }, 1000)
@@ -179,10 +180,32 @@ function answerButtonClick(event) {
             
                 // Display the scores
                 displayScores();
+                playAgainButton.style.display = 'block';
             });
         }
     }
 }
+function showHighScores() {
+    feedBackSpace.style.display = 'none';
+    quizSpace.textContent = '';
+    answerSpace.textContent = '';
+
+    displayScores();
+
+    var playAgainButton = document.getElementById("play-again");
+    playAgainButton.style.display = 'block';
+}
+
+function playAgain() {
+    questionNum = 0;
+    numCorrect = 0;
+    timeLeft = 60;
+    playAgainButton.style.display = 'none';
+    startGame();
+}
+
+var playAgainButton = document.getElementById("play-again");
+playAgainButton.addEventListener("click", playAgain);
 
 
 
