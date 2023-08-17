@@ -97,15 +97,27 @@ function answerButtonClick(event) {
         if (questionNum >= myQuestions.length -1) {
             clearInterval(handleTimer);
             timerSpace.textContent = '';
-            quizSpace.textContent = '';
+            quizSpace.textContent = 'Quiz completed!';
             answerSpace.textContent = '';
-            feedBackSpace.textContent = 'Quiz completed!';
-            
+            feedBackSpace.textContent = '';
+
+            var initalsInput = document.createElement("input");
+            initalsInput.type = "text";
+            initalsInput.placeholder = "Enter your Initals";
+            initalsInput,id = "initals-input";
+
+            var submitButton = document.createElement("button");
+            submitButton.textContent = "Submit";
+
+            answerSpace.appendChild(initalsInput);
+            feedBackSpace.appendChild(submitButton);
             }
         questionNum++;
         renderQuestions();
-        
+    return numCorrect;
     }
 }
+
+
 
 startButton.addEventListener("click", startGame);
