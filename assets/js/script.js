@@ -23,12 +23,12 @@ var myQuestions = [
         question: "Which is a commonly used coding language for web development?",
         answers: ['javaScript', 'Chrome','Safari','All of the above'],
         correctAnswer: 'javaScript'
-    }/*,
+    },
     {
         question: "",
         answers: [],
         correctAnswer: ''
-    }*/
+    }
 ];
 
 var startButton = document.querySelector("#start");
@@ -62,6 +62,7 @@ function renderQuestions(){
 // I'll have to make another function called startGame that the event listener will call that will include code for the timer and deducting time.
 function startGame() {
     startButton.style.display = 'none';
+    feedBackSpace.style.display = 'none';
     handleTimer = setInterval(function(){
         timerSpace.textContent = timeLeft;
         timeLeft--;
@@ -71,8 +72,33 @@ function startGame() {
             quizSpace.textContent = '';
             answerSpace.textContent = '';
             feedBackSpace.textContent = 'Quiz completed!';
+
+            var initalsInput = document.createElement("input");
+            initalsInput.type = "text";
+            initalsInput.placeholder = "Enter your Initals";
+            initalsInput.id = "initals-input";
+            var submitButton = document.createElement("button");
+            submitButton.textContent = "Submit";
+        
+            feedBackSpace.appendChild(initalsInput);
+            feedBackSpace.appendChild(submitButton);
+        
+            submitButton.addEventListener('click', function(){
+                var initialsValue = initalsInput.value;
+        
+                // Get existing scores from Local Storage or initialize an empty array
+                var storedScores = JSON.parse(localStorage.getItem("quizScores")) || [];
+        
+                // Add the new score to the array
+                storedScores.push({ initials: initialsValue, score: numCorrect });
+        
+                // Store the updated scores array back to Local Storage
+                localStorage.setItem("quizScores", JSON.stringify(storedScores));
+            });    
         }
     }, 1000)
+    
+
 
     renderQuestions();
     // Remove any existing event listeners on answerSpace
@@ -84,7 +110,7 @@ function startGame() {
 
 function answerButtonClick(event) {
     var clickedButton = event.target;
-
+    feedBackSpace.style.display = 'block';
     // Check if the clicked element has the 'choice' class
     if (clickedButton.classList.contains("choice")) {
         if(clickedButton.classList.contains("correct")){
@@ -94,6 +120,8 @@ function answerButtonClick(event) {
             timeLeft = timeLeft - 10;
             feedBackSpace.textContent = 'Wrong!';
         }
+        questionNum++;
+        renderQuestions();
         if (questionNum >= myQuestions.length -1) {
             clearInterval(handleTimer);
             timerSpace.textContent = '';
@@ -104,17 +132,27 @@ function answerButtonClick(event) {
             var initalsInput = document.createElement("input");
             initalsInput.type = "text";
             initalsInput.placeholder = "Enter your Initals";
-            initalsInput,id = "initals-input";
+            initalsInput.id = "initals-input";
 
             var submitButton = document.createElement("button");
             submitButton.textContent = "Submit";
 
-            answerSpace.appendChild(initalsInput);
+            feedBackSpace.appendChild(initalsInput);
             feedBackSpace.appendChild(submitButton);
-            }
-        questionNum++;
-        renderQuestions();
-    return numCorrect;
+
+            submitButton.addEventListener('click', function(){
+                var initialsValue = initalsInput.value;
+
+                // Get existing scores from Local Storage or initialize an empty array
+                var storedScores = JSON.parse(localStorage.getItem("quizScores")) || [];
+
+                // Add the new score to the array
+                storedScores.push({ initials: initialsValue, score: numCorrect });
+
+                // Store the updated scores array back to Local Storage
+                localStorage.setItem("quizScores", JSON.stringify(storedScores));
+            });
+        }
     }
 }
 
