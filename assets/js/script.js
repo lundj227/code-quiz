@@ -42,6 +42,25 @@ var numCorrect = 0;
 var timeLeft = 60;
 var handleTimer;
 
+function displayScores() {
+    var storedScores = JSON.parse(localStorage.getItem("quizScores")) || [];
+    var scoresList = document.createElement("ul");
+
+    // Clear the existing content
+    var scoresDiv = document.getElementById('scores');
+    scoresDiv.innerHTML = '';
+
+    // Iterate through storedScores and create a list item for each entry
+    storedScores.forEach(function(scoreEntry) {
+        var scoreItem = document.createElement("li");
+        scoreItem.textContent = scoreEntry.initials + ": " + scoreEntry.score;
+        scoresList.appendChild(scoreItem);
+    });
+
+    scoresDiv.appendChild(scoresList);
+}
+
+
 function renderQuestions(){
     quizSpace.innerHTML = myQuestions[questionNum].question;
     // Resets available answers
@@ -63,6 +82,8 @@ function renderQuestions(){
 function startGame() {
     startButton.style.display = 'none';
     feedBackSpace.style.display = 'none';
+    var scoresDiv = document.getElementById('scores');
+    scoresDiv.innerHTML = '';
     handleTimer = setInterval(function(){
         timerSpace.textContent = timeLeft;
         timeLeft--;
@@ -70,7 +91,7 @@ function startGame() {
             clearInterval(handleTimer);
             timerSpace.textContent = '';
             quizSpace.textContent = '';
-            answerSpace.textContent = '';
+            answerSpace.textContent = 'Final score: '+ numCorrect + '/5';
             feedBackSpace.textContent = 'Quiz completed!';
 
             var initalsInput = document.createElement("input");
@@ -94,6 +115,8 @@ function startGame() {
         
                 // Store the updated scores array back to Local Storage
                 localStorage.setItem("quizScores", JSON.stringify(storedScores));
+
+                displayScores();
             });    
         }
     }, 1000)
@@ -111,6 +134,8 @@ function startGame() {
 function answerButtonClick(event) {
     var clickedButton = event.target;
     feedBackSpace.style.display = 'block';
+    var scoresDiv = document.getElementById('scores');
+    scoresDiv.innerHTML = '';
     // Check if the clicked element has the 'choice' class
     if (clickedButton.classList.contains("choice")) {
         if(clickedButton.classList.contains("correct")){
@@ -126,7 +151,7 @@ function answerButtonClick(event) {
             clearInterval(handleTimer);
             timerSpace.textContent = '';
             quizSpace.textContent = 'Quiz completed!';
-            answerSpace.textContent = '';
+            answerSpace.textContent = 'Final score: '+ numCorrect + '/5';
             feedBackSpace.textContent = '';
 
             var initalsInput = document.createElement("input");
@@ -142,15 +167,18 @@ function answerButtonClick(event) {
 
             submitButton.addEventListener('click', function(){
                 var initialsValue = initalsInput.value;
-
+            
                 // Get existing scores from Local Storage or initialize an empty array
                 var storedScores = JSON.parse(localStorage.getItem("quizScores")) || [];
-
+            
                 // Add the new score to the array
                 storedScores.push({ initials: initialsValue, score: numCorrect });
-
+            
                 // Store the updated scores array back to Local Storage
                 localStorage.setItem("quizScores", JSON.stringify(storedScores));
+            
+                // Display the scores
+                displayScores();
             });
         }
     }
