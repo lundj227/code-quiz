@@ -9,7 +9,7 @@ html{
 }
 #view-high{
     color: var(--main-color);
-    background-color: var(--background-color);
+    background-color: black;/*var(--background-color);*/
     margin: 20px;
     border: 10px 10px;
     border-radius: 5px;
@@ -41,9 +41,11 @@ li{
     font-size: 40px;
 }
 
+
 #info{
     background-color: var(--background-color);
     text-align: center;
+    margin: 0 250px;
 }
 
 #again{
@@ -69,4 +71,11 @@ button{
     display: flex;
     text-align: center;
     flex-direction: column;
+    margin: 5px, 20px;
+}
+
+
+header{
+    border: 10px solid black;
+    margin: 20px 250px;
 }
