@@ -55,6 +55,7 @@ function displayScores() {
         var scoreItem = document.createElement("li");
         scoreItem.textContent = scoreEntry.initials + ": " + scoreEntry.score;
         scoresList.appendChild(scoreItem);
+        scoresList.classList.add('finalscores')
     });
 
     scoresDiv.appendChild(scoresList);
